@@ -8,7 +8,10 @@ module.exports = {
     "1. Conceptual hints, not too descriptive so that solution is in the hints.\n" +
     "2. Hints should be concise.\n" +
     "3. Hints can be a title and description \n" +
-    "Further, the response should contain only the hints, be in markdown format, and each hint should be separated by a line break.\n" +
+    "Furthermore, the response should follow the following rules:\n" +
+    "1. Contain only the hints, with no other text\n" +
+    "2. Use markdown formatting (Dont specify that it is markdown in the response)\n" +
+    "3. Be separated by --- \n" +
     "This is a problem statement = ${problem_statement}\n ********* \n " +
     "This is a solution to that problem statement = ${editorial}",
 };
