@@ -1,0 +1,19 @@
+{
+    "name": "CpBuddy",
+    "version": "0.0.1",
+    "manifest_version": 2,
+    "browser_action": {
+        "default_popup": "index.htm",
+        "default_icon": "logo.png"
+    },
+    "icons": {
+        "128": "logo.png"
+    },
+    "permissions": [
+        "storage",
+        "activeTab",
+        "http://localhost:3000/api/hints"
+    ]
+}
+
+
