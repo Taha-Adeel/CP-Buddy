@@ -13,7 +13,12 @@ async function execute(problem_statement, editorial) {
   });
 
   console.log("Response from GPT-4o:\n ", completion.choices[0].message.content);
-  return completion.choices[0];
+  
+  const hints_ = completion.choices[0].message.content.split('\n\n---\n\n');
+  const jsonHints = {
+    hints: hints_
+  }
+  return jsonHints;
 }
 
 module.exports = {
