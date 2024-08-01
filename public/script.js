@@ -1,4 +1,4 @@
-
+var activeTabUrl;
  // A simple chatbot that responds with some predefined answers
  function chatbot(input) {
     let output = "";
@@ -34,7 +34,7 @@
     userMessage.appendChild(userText);
     chat.appendChild(userMessage);
     chat.scrollTop = chat.scrollHeight;
-    // savechat();
+    saveChat();
   }
 
   // Display the bot message on the chat
@@ -52,7 +52,7 @@
     botMessage.appendChild(botText);
     chat.appendChild(botMessage);
     chat.scrollTop = chat.scrollHeight;
-    // savechat();
+    saveChat();
   }
 
   // Send the user message and get the bot response
@@ -70,12 +70,12 @@
 
   function saveChat() {
     let chat = document.getElementById("chat").innerHTML;
-    localStorage.setItem('chatData', chat);
+    localStorage.setItem(activeTabUrl, chat);
   }
 
   function loadChat() {
-    let chatData = localStorage.getItem('chatData');
-    if (chatData) {
+    let chatData = sessionStorage.getItem(activeTabUrl);
+    if (chatData != null) {
         document.getElementById("chat").innerHTML = chatData;
     }
   }
@@ -85,15 +85,14 @@
     
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
       var activeTab = tabs[0];
-      var activeTabUrl = activeTab.url;
-      displayUserMessage(activeTabUrl);
+      activeTabUrl = activeTab.url;
 
       var backendUrl = 'http://localhost:3000/api/hints';
 
-      let sentUrls = localStorage.getItem(activeTab);
+      let sentUrls = JSON.parse(localStorage.getItem('sentUrls')) || [];
       // console.log(sentUrls)
 
-      if(sentUrls == null){
+      if(!sentUrls.includes(activeTabUrl)){
         fetch(backendUrl, {
           method: 'POST',
           headers: {
@@ -104,17 +103,17 @@
         .then(response => response.json())
         .then(data => {
           sentUrls.push(activeTabUrl);
-          localStorage.setItem(activeTabUrl, JSON.stringify(data));
-          console.log(data);
+          sessionStorage.setItem(sentUrls, JSON.stringify(sentUrls));
         })
         .catch(error => {
-          document.getElementById('status').textContent = 'Error sending URL.';
           console.error('Error:', error);
         });
       }
 
     });
   });
+
+  loadChat();
   
 
   // Add a click event listener to the button
