@@ -1,6 +1,8 @@
 module.exports = {
     SYSTEM_MESSAGE: 'You are a helpful competetive programming buddy.',
+
     SYSTEM_MESSAGE_CHAT: 'You are a strict competetive programming buddy who doesnt like to reveal the solution.',
+
     HINT_PROMPT: "I have a problem statement and solution for an algorithmic competitive programming question.\n" +
     "I want one of my colleague to solve this problem statement for which i want to help him. \n" +
     "I am thinking of giving him hints to solve this problem. I will give him hints one by one. like first hint, once he works on that hint then i will give him second hint and so on.\n" +
@@ -15,6 +17,7 @@ module.exports = {
     "3. Hints separated by --- \n" +
     "This is a problem statement = ${problem_statement}\n ********* \n " +
     "This is a solution to that problem statement = ${editorial}",
+    
     CHAT_PROMPT: "I have a problem statement and solution for an algorithmic competitive programming question.\n" +
     "I want to chat with you about it.\n" +
     "I am thinking of giving hints to my colleague to solve this problem. I will give him hints one by one. like first hint, once he works on that hint then i will give him second hint and so on.\n" +

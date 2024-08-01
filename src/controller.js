@@ -1,8 +1,10 @@
 const hintsService = require('./chat-bot/hints');
 const { getProblemAndEditorial } = require('./info-retriever/problem_statement');
+const chatService = require('./chat-bot/chat');
+const memoizeAsync = require('./util').memoizeAsync;
 
-exports.getHint = async (req, res) => {
-  const { url } = req.body;
+// Memoized version of the getHint function
+const memoizedGetHint = memoizeAsync(async (url) => {
   console.log('Received Hint Request');
   console.log('URL:', url);
   
@@ -11,8 +13,18 @@ exports.getHint = async (req, res) => {
   console.log('Problem Statement:\n', problemText);
   console.log('Editorial:\n', editorialText);
 
-  const result = await hintsService.execute(problemText, editorialText);
-  res.status(201).json(result);
+  return await hintsService.execute(problemText, editorialText);
+});
+
+exports.getHint = async (req, res) => {
+  try {
+    const { url } = req.body;
+    const result = await memoizedGetHint(url);
+    res.status(201).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
 
 exports.chat = async (req, res) => {
@@ -20,7 +32,7 @@ exports.chat = async (req, res) => {
   console.log('Received Chat Request');
   console.log('Problem Statement:\n', problem_statement);
   console.log('Editorial:\n', editorial);
-  console.log('History:\, messages');
+  console.log('History:\n, messages');
 
   const result = await chatService.execute(problem_statement, editorial, hints, messages);
 
