@@ -1,0 +1,16 @@
+{
+  "name": "hackathon",
+  "version": "1.0.0",
+  "description": "Develop an ai assistant/chatbot that will help guide you when you are stuck during problem solving on online judges (codeforces here)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "openai": "^4.53.2"
+  }
+}
