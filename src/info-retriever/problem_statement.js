@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const { getEditorial } = require('./editorial');
+const memoizeAsync = require('../util').memoizeAsync;
 
 async function getProblemAndEditorial(url) {
   const browser = await puppeteer.launch();
@@ -29,7 +30,11 @@ async function getProblemAndEditorial(url) {
   return { problemText, editorialText };
 }
 
-module.exports = { getProblemAndEditorial };
+async function getProblemAndEditorialMemoized(url) {
+  return await memoizeAsync(getProblemAndEditorial)(url);
+}
+
+module.exports = { getProblemAndEditorial, getProblemAndEditorialMemoized };
 
 // const url = 'https://codeforces.com/contest/1990/problem/A';
 // getProblemAndEditorial(url).then(result => {

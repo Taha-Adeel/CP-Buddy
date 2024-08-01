@@ -1,5 +1,5 @@
 const hintsService = require('./chat-bot/hints');
-const { getProblemAndEditorial } = require('./info-retriever/problem_statement');
+const { getProblemAndEditorialMemoized } = require('./info-retriever/problem_statement');
 const chatService = require('./chat-bot/chat');
 const memoizeAsync = require('./util').memoizeAsync;
 
@@ -8,7 +8,7 @@ const memoizedGetHint = memoizeAsync(async (url) => {
   console.log('Received Hint Request');
   console.log('URL:', url);
   
-  const { problemText, editorialText } = await getProblemAndEditorial(url);
+  const { problemText, editorialText } = await getProblemAndEditorialMemoized(url);
 
   console.log('Problem Statement:\n', problemText);
   console.log('Editorial:\n', editorialText);
@@ -28,11 +28,9 @@ exports.getHint = async (req, res) => {
 };
 
 exports.chat = async (req, res) => {
-  const { problem_statement, editorial, messages } = req.body;
-  console.log('Received Chat Request');
-  console.log('Problem Statement:\n', problem_statement);
-  console.log('Editorial:\n', editorial);
-  console.log('History:\n, messages');
+  const { url, messages } = req.body;
+  const { problem_statement, editorial } = await getProblemAndEditorialMemoized(url);
+  const hints = memoizedGetHint(url);
 
   const result = await chatService.execute(problem_statement, editorial, hints, messages);
 
