@@ -90,9 +90,10 @@
 
       var backendUrl = 'http://localhost:3000/api/hints';
 
-      let sentUrls = JSON.parse(localStorage.getItem('sentUrls')) || [];
+      let sentUrls = localStorage.getItem(activeTab);
+      // console.log(sentUrls)
 
-      if(!sentUrls.includes(activeTabUrl)){
+      if(sentUrls == null){
         fetch(backendUrl, {
           method: 'POST',
           headers: {
@@ -103,7 +104,8 @@
         .then(response => response.json())
         .then(data => {
           sentUrls.push(activeTabUrl);
-          localStorage.setItem('sentUrls', JSON.stringify(sentUrls));
+          localStorage.setItem(activeTabUrl, JSON.stringify(data));
+          console.log(data);
         })
         .catch(error => {
           document.getElementById('status').textContent = 'Error sending URL.';
