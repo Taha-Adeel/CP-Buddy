@@ -1,16 +1,18 @@
-
-async function getEditorial(tutorialUrl, page) {
-
+async function getEditorial(tutorialUrl, page, problemCode) {
   let editorialText = 'Tutorial link not found';
 
   if (tutorialUrl) {
     // Go to the tutorial URL
     await page.goto(tutorialUrl, { waitUntil: 'networkidle2' });
 
-    editorialText = await page.evaluate(() => {
+    editorialText = await page.evaluate((problemCode) => {
       const tutorialLinkElement = Array.from(document.querySelectorAll('a'))
-        .find(a => a.href.endsWith('/problem/D'));
-      console.log(tutorialLinkElement.textContent)
+        .find(a => a.href.endsWith('/problem/' + problemCode));
+      
+      if (!tutorialLinkElement) {
+        return 'Tutorial link not found';
+      }
+
       let currentElement = tutorialLinkElement.parentElement.nextElementSibling;
       const elements = [];
       while (currentElement) {
@@ -23,12 +25,11 @@ async function getEditorial(tutorialUrl, page) {
         currentElement = currentElement.nextElementSibling;
       }
 
-
       return elements.join('\n');
-    });
-    
-    return editorialText;
+    }, problemCode);
   }
+
+  return editorialText;
 }
 
 module.exports = {

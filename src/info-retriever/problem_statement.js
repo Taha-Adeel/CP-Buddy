@@ -21,7 +21,8 @@ async function getProblemAndEditorial(url) {
     return tutorialLinkElement ? tutorialLinkElement.href : null;
   });
 
-  const editorialText = await getEditorial(tutorialUrl, page);
+  const problemCode = url.split('/').pop();
+  const editorialText = await getEditorial(tutorialUrl, page, problemCode);
 
   await browser.close();
 
