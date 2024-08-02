@@ -74,18 +74,17 @@ var activeTabUrl;
   }
 
   function loadChat() {
-    let chatData = sessionStorage.getItem(activeTabUrl);
+    let chatData = localStorage.getItem(activeTabUrl);
     if (chatData != null) {
         document.getElementById("chat").innerHTML = chatData;
     }
   }
 
-  document.addEventListener('DOMContentLoaded', function() {
-    loadChat();
-    
+  document.addEventListener('DOMContentLoaded', function() {    
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
       var activeTab = tabs[0];
       activeTabUrl = activeTab.url;
+      loadChat();
 
       var backendUrl = 'http://localhost:3000/api/hints';
 
