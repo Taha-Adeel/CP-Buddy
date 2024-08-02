@@ -1,23 +1,5 @@
 var activeTabUrl;
- // A simple chatbot that responds with some predefined answers
- function chatbot(input) {
-    let output = "";
-    input = input.toLowerCase();
-    if (input.includes("hello") || input.includes("hi")) {
-      output = "Hello, nice to meet you!";
-    } else if (input.includes("how are you")) {
-      output = "I'm doing fine, thank you for asking.";
-    } else if (input.includes("what is your name")) {
-      output = "My name is Jarvis, I'm a chatbot.";
-    } else if (input.includes("what can you do")) {
-      output = "I can chat with you and answer some simple questions.";
-    } else if (input.includes("tell me a joke")) {
-      output = "Why did the chicken go to the seance? To get to the other side.";
-    } else {
-      output = "Sorry, I don't understand that. Please try something else.";
-    }
-    return output;
-  }
+var chatMessages;
 
   // Display the user message on the chat
   function displayUserMessage(message) {
@@ -60,10 +42,42 @@ var activeTabUrl;
     let input = document.getElementById("input").value;
     if (input) {
       displayUserMessage(input);
-      let output = chatbot(input);
-      setTimeout(function() {
-        displayBotMessage(output);
-      }, 1000);
+      document.getElementById("input").value = "";
+      var chatMessages = [];
+      
+      try {
+        if (localStorage.getItem('chatMessages') !== null) {
+          chatMessages = JSON.parse(localStorage.getItem('chatMessages'));
+        }
+      } catch (e) {
+        chatMessages = [];
+      }      
+      chatMessages.push({ role: "user", content: input });
+      
+      try {
+        localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
+      } catch (e) {
+      }
+      var backendUrl = 'http://localhost:3000/api/chat';
+      
+      fetch(backendUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ url: activeTabUrl , messages : chatMessages})
+      })
+      .then(response => response.json())
+      .then(data => {
+        chatMessages.push({ role: "assistant", content: data });
+        sessionStorage.setItem('chatMessages', JSON.stringify(chatMessages));
+        displayBotMessage(data);
+      })
+      .catch(error => {
+        chatMessages = []
+      });
+      
+      saveChat();
       document.getElementById("input").value = "";
     }
   }
@@ -71,6 +85,7 @@ var activeTabUrl;
   function saveChat() {
     let chat = document.getElementById("chat").innerHTML;
     localStorage.setItem(activeTabUrl, chat);
+    localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
   }
 
   function loadChat() {
@@ -102,12 +117,15 @@ var activeTabUrl;
         .then(response => response.json())
         .then(data => {
           sentUrls.push(activeTabUrl);
-          sessionStorage.setItem(sentUrls, JSON.stringify(sentUrls));
+          sessionStorage.setItem('sentUrls', JSON.stringify(sentUrls));
         })
         .catch(error => {
           console.error('Error:', error);
         });
       }
+
+      let chat = document.getElementById("chat");
+      chat.scrollTop = chat.scrollHeight;
 
     });
   });

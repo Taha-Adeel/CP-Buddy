@@ -29,10 +29,10 @@ exports.getHint = async (req, res) => {
 
 exports.chat = async (req, res) => {
   const { url, messages } = req.body;
-  const { problem_statement, editorial } = await getProblemAndEditorialMemoized(url);
+  const { problemText, editorialText } = await getProblemAndEditorialMemoized(url);
   const hints = memoizedGetHint(url);
 
-  const result = await chatService.execute(problem_statement, editorial, hints, messages);
+  const result = await chatService.execute(problemText, editorialText, hints, messages);
 
   res.status(201).json(result);
 };
