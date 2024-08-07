@@ -58,7 +58,7 @@ var chatMessages;
         localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
       } catch (e) {
       }
-      var backendUrl = 'http://localhost:3000/api/chat';
+      var backendUrl = 'https://cpbuddy-server.onrender.com/api/chat';
       
       fetch(backendUrl, {
         method: 'POST',
@@ -101,7 +101,7 @@ var chatMessages;
       activeTabUrl = activeTab.url;
       loadChat();
 
-      var backendUrl = 'http://localhost:3000/api/hints';
+      var backendUrl = 'https://cpbuddy-server.onrender.com/api/hints';
 
       let sentUrls = JSON.parse(localStorage.getItem('sentUrls')) || [];
       // console.log(sentUrls)

@@ -9,7 +9,7 @@ async function execute(problem_statement, editorial) {
       {"role": "system", "content": prompts.SYSTEM_MESSAGE},
       {"role": "user", "content": hintPrompt},
     ],
-    model: "gpt-4o",
+    model: "gpt-4o-mini-2024-07-18",
   });
 
   console.log("Response from GPT-4o:\n ", completion.choices[0].message.content);
