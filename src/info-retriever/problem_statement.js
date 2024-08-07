@@ -3,7 +3,10 @@ const { getEditorial } = require('./editorial');
 const memoizeAsync = require('../util').memoizeAsync;
 
 async function getProblemAndEditorial(url) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    executablePath: '/opt/render/.cache/puppeteer/chrome/linux-127.0.6533.88/chrome',
+    headless: true,
+  })
   const page = await browser.newPage();
 
   // Go to the given URL
